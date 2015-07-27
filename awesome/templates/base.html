@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link href="http://cdn.pydata.org/bokeh/release/bokeh-0.8.2.min.css"
+          rel="stylesheet" type="text/css">
+    <title></title>
+</head>
+<body>
+
+<div class="content"><h1>Welcome to my graph page</h1></div>
+<button class="something-button">DO SOMETHING</button>
+<input type="text" class="x-input-box"/>
+<input type="text" class="y-input-box"/>
+
+<div class="image-holder">
+
+</div>
+
+<ul class="new-item-list">
+</ul>
+<table class="new-item-table" style="border: 1px solid black;">
+    <tr><th>Name</th><th>Age</th></tr>
+</table>
+
+{% comment %}
+<img class="graph" src="{{ graph }}">
+<script src="http://cdn.pydata.org/bokeh/release/bokeh-0.9.1.min.js"></script>
+{% autoescape off %}
+    {{ bokeh_graph }}
+    {{ bokeh_script }}
+{% endautoescape %}
+{% endcomment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="application/javascript">
+
+    var addToList = function (value, age){
+        var unorderedList = $(".new-item-list");
+        var newObject = $("<li>" + value + " " + age + "</li>");
+        unorderedList.append(newObject);
+    };
+
+    var addToTable = function (value, age){
+        var tableTarget = $(".new-item-table");
+        var newTableRow = $("<tr><td>" + value + "</td><td>" + age + "</tr>");
+        tableTarget.append(newTableRow);
+    };
+
+    var doSomething = function (){
+        var xList = $(".x-input-box")[0].value;
+        var yList = $(".y-input-box")[0].value;
+        /* addToList(inputBoxValue, ageInputBoxValue);
+        addToTable(inputBoxValue, ageInputBoxValue); */
+        var getUrl = "http://localhost:8000/api/graph/?x=" + xList + "&y="  + yList;
+        $.getJSON(getUrl, function (response){
+            newGraph = $("<img src='" + response.image_source + "'>");
+            $(".image-holder").html(newGraph);
+        });
+    };
+
+    $('document').ready(function (){
+        $('.something-button').click(doSomething);
+    });
+
+</script>
+</body>
+</html>
